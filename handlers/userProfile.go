@@ -17,7 +17,7 @@ func NewUserProfile(service *service.UserService) *UserProfile {
 }
 
 func (u *UserProfile) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	profile := u.service.GetUserProfile(222)
+	profile := u.service.GetUserProfile(1)
 
 	err := u.tpl.Execute(w, profile)
 	if err != nil {

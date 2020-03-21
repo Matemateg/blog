@@ -5,11 +5,22 @@ import (
 	"github.com/Matemateg/blog/db"
 	"github.com/Matemateg/blog/handlers"
 	"github.com/Matemateg/blog/service"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
+	"log"
 	"net/http"
 )
 
 func main() {
-	userProfileSrv := service.NewUserProfile(&db.User{}, &db.Post{})
+	sqlDB, err := sqlx.Connect("mysql", "root:123@/blog")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	err = sqlDB.Ping()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	userProfileSrv := service.NewUserProfile(db.NewUser(sqlDB), &db.Post{})
 	http.Handle("/user/", handlers.NewUserProfile(userProfileSrv))
 	fmt.Println(http.ListenAndServe(":8080", nil))
 }
