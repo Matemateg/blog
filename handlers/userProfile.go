@@ -9,7 +9,7 @@ import (
 
 type UserProfile struct {
 	service *service.UserService
-	tpl *template.Template
+	tpl     *template.Template
 }
 
 func NewUserProfile(service *service.UserService) *UserProfile {
@@ -36,4 +36,3 @@ func (u *UserProfile) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
-

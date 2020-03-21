@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	sqlDB, err := sqlx.Connect("mysql", "root:123@/blog")
+	sqlDB, err := sqlx.Connect("mysql", "root:123@/blog?parseTime=true")
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -20,7 +20,7 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	userProfileSrv := service.NewUserProfile(db.NewUser(sqlDB), &db.Post{})
+	userProfileSrv := service.NewUserProfile(db.NewUser(sqlDB), db.NewPost(sqlDB))
 	http.Handle("/user/", handlers.NewUserProfile(userProfileSrv))
 	fmt.Println(http.ListenAndServe(":8080", nil))
 }
