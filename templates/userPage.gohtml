@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blog</title>
+</head>
+<body>
+{{ .User.Name }}<br>
+{{range .Posts}}
+    {{.ID}}
+    {{.Text}}<br>
+{{end}}
+</body>
+</html>
+

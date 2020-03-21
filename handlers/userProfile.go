@@ -1,21 +1,28 @@
 package handlers
 
 import (
-	"fmt"
 	"github.com/Matemateg/blog/service"
+	"html/template"
 	"net/http"
 )
 
 type UserProfile struct {
 	service *service.UserService
+	tpl *template.Template
 }
 
 func NewUserProfile(service *service.UserService) *UserProfile {
-	return &UserProfile{service: service}
+	tpl := template.Must(template.ParseFiles("templates/userPage.gohtml"))
+	return &UserProfile{service: service, tpl: tpl}
 }
 
 func (u *UserProfile) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	profile := u.service.GetUserProfile(222)
-	fmt.Fprint(w, profile.User)
+
+	err := u.tpl.Execute(w, profile)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
