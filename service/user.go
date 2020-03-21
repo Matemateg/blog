@@ -19,9 +19,13 @@ type UserProfileData struct {
 	Posts []entities.Post
 }
 
-func (us *UserService) GetUserProfile(id int64) *UserProfileData {
-	return &UserProfileData{
-		User:  us.userDB.GetByID(id),
-		Posts: us.postDB.ListByUserID(id),
+func (us *UserService) GetUserProfile(id int64) (*UserProfileData, error) {
+	user, err := us.userDB.GetByID(id)
+	if err != nil {
+		return nil, err
 	}
+	return &UserProfileData{
+		User:  user,
+		Posts: us.postDB.ListByUserID(id),
+	}, nil
 }

@@ -4,6 +4,7 @@ import (
 	"github.com/Matemateg/blog/service"
 	"html/template"
 	"net/http"
+	"strconv"
 )
 
 type UserProfile struct {
@@ -17,9 +18,19 @@ func NewUserProfile(service *service.UserService) *UserProfile {
 }
 
 func (u *UserProfile) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	profile := u.service.GetUserProfile(1)
+	userID, err := strconv.ParseInt(r.FormValue("id"), 10, 64)
+	if err != nil {
+		http.Error(w, "invalid user id: "+err.Error(), http.StatusBadRequest)
+		return
+	}
 
-	err := u.tpl.Execute(w, profile)
+	profile, err := u.service.GetUserProfile(userID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = u.tpl.Execute(w, profile)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
