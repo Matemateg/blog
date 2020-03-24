@@ -23,3 +23,12 @@ func (u *User) GetByID(id int64) (*entities.User, error) {
 	}
 	return &p, nil
 }
+
+func (u *User) Login(login, password string) (*entities.User, error) {
+	row := u.db.QueryRowx("SELECT * FROM users WHERE login = ?, password = ?", login, password)
+	var p entities.User
+	if err := row.StructScan(&p); err != nil {
+		return nil, fmt.Errorf("getting user from db with login, password, %v", err)
+	}
+	return &p, nil
+}

@@ -22,5 +22,8 @@ func main() {
 	}
 	userProfileSrv := service.NewUserProfile(db.NewUser(sqlDB), db.NewPost(sqlDB))
 	http.Handle("/user/", handlers.NewUserProfile(userProfileSrv))
+
+	http.Handle("/login/", handlers.NewPageLogin())
+
 	fmt.Println(http.ListenAndServe(":8080", nil))
 }
