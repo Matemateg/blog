@@ -25,5 +25,7 @@ func main() {
 
 	http.Handle("/login/", handlers.NewPageLogin())
 
+	http.Handle("/auth/", handlers.NewUserAuth(userProfileSrv))
+
 	fmt.Println(http.ListenAndServe(":8080", nil))
 }

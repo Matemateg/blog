@@ -23,7 +23,7 @@ type UserProfileData struct {
 func (us *UserService) GetUserProfile(id int64) (*UserProfileData, error) {
 	user, err := us.userDB.GetByID(id)
 	if err != nil {
-		return nil, fmt.Errorf("getting users, %v", err)
+		return nil, fmt.Errorf("getting user's profile, %v", err)
 	}
 	posts, err := us.postDB.ListByUserID(id)
 	if err != nil {
@@ -33,4 +33,12 @@ func (us *UserService) GetUserProfile(id int64) (*UserProfileData, error) {
 		User:  user,
 		Posts: posts,
 	}, nil
+}
+
+func (us *UserService) Login(login, password string) (*entities.User, error) {
+	user, err := us.userDB.GetByLogin(login, password)
+	if err != nil {
+		return nil, fmt.Errorf("getting user, %v", err)
+	}
+	return user, nil
 }
