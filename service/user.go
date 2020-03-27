@@ -42,3 +42,11 @@ func (us *UserService) Login(login, password string) (*entities.User, error) {
 	}
 	return user, nil
 }
+
+func (us *UserService) GetBySSID(ssid string) (*entities.User, error) {
+	user, err := us.userDB.GetBySSID(ssid)
+	if err != nil {
+		return nil, fmt.Errorf("getting user, %v", err)
+	}
+	return user, nil
+}

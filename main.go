@@ -27,5 +27,7 @@ func main() {
 
 	http.Handle("/auth/", handlers.NewUserAuth(userProfileSrv))
 
+	http.Handle("/logout/", handlers.NewPageLogout())
+
 	fmt.Println(http.ListenAndServe(":8080", nil))
 }

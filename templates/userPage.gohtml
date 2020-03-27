@@ -5,8 +5,16 @@
     <title>Blog</title>
 </head>
 <body>
-{{ .User.Name }}<br>
-{{range .Posts}}
+
+{{if not .CurrentUser}}
+    <a href="/login/">Login</a><br>
+{{else}}
+    Здравствуйте, {{.CurrentUser.Name}}
+    <a href="/logout/">Logout</a><br>
+{{end}}
+
+{{ .UserProfile.User.Name }}<br>
+{{range .UserProfile.Posts}}
     {{.ID}}
     {{.Text}}<br>
 {{end}}
