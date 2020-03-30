@@ -50,3 +50,11 @@ func (us *UserService) GetBySSID(ssid string) (*entities.User, error) {
 	}
 	return user, nil
 }
+
+func (us *UserService) NewPost(userID int64, text string) error {
+	err := us.postDB.AddPost(userID, text)
+	if err != nil {
+		return fmt.Errorf("adding post, %v", err)
+	}
+	return nil
+}

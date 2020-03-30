@@ -44,9 +44,11 @@ func (u *UserProfile) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	pageData := struct {
 		CurrentUser *entities.User
 		UserProfile *service.UserProfileData
+		CanWrite bool
 	}{
 		CurrentUser: currentUser,
 		UserProfile: profile,
+		CanWrite: currentUser != nil && currentUser.ID == profile.User.ID,
 	}
 
 	err = u.tpl.Execute(w, pageData)

@@ -1,8 +1,10 @@
 package db
 
 import (
+	"fmt"
 	"github.com/Matemateg/blog/entities"
 	"github.com/jmoiron/sqlx"
+	"time"
 )
 
 type Post struct {
@@ -29,4 +31,17 @@ func (p *Post) ListByUserID(userID int64) ([]entities.Post, error) {
 	}
 
 	return posts, nil
+}
+
+func (p *Post) AddPost(userID int64, text string) error {
+	_, err := p.db.Exec(
+		"INSERT INTO posts (text, user_id, created_at)VALUES (?,?,?)",
+		text,
+		userID,
+		time.Now(),
+		)
+	if err != nil {
+		return fmt.Errorf("insert post in DB, %v", err)
+	}
+	return nil
 }

@@ -29,5 +29,7 @@ func main() {
 
 	http.Handle("/logout/", handlers.NewPageLogout())
 
+	http.Handle("/addPost/", handlers.NewNewPost(userProfileSrv))
+
 	fmt.Println(http.ListenAndServe(":8080", nil))
 }
