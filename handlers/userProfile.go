@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/Matemateg/blog/entities"
+	"github.com/Matemateg/blog/middlewares"
 	"github.com/Matemateg/blog/service"
 	"html/template"
 	"net/http"
@@ -31,15 +32,16 @@ func (u *UserProfile) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var currentUser *entities.User
-	cookie, err := r.Cookie("SSID")
-	if err == nil && cookie != nil {
-		currentUser, err = u.service.GetBySSID(cookie.Value)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-	}
+	currentUser := middlewares.GetCurrentUser(r.Context())
+	//var currentUser *entities.User
+	//cookie, err := r.Cookie("SSID")
+	//if err == nil && cookie != nil {
+	//	currentUser, err = u.service.GetBySSID(cookie.Value)
+	//	if err != nil {
+	//		http.Error(w, err.Error(), http.StatusInternalServerError)
+	//		return
+	//	}
+	//}
 
 	pageData := struct {
 		CurrentUser *entities.User
