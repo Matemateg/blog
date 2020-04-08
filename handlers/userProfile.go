@@ -15,7 +15,7 @@ type UserProfile struct {
 }
 
 func NewUserProfile(service *service.UserService) *UserProfile {
-	tpl := template.Must(template.ParseFiles("templates/userPage.gohtml"))
+	tpl := template.Must(template.ParseFiles("templates/userPage.gohtml", "templates/content.html"))
 	return &UserProfile{service: service, tpl: tpl}
 }
 

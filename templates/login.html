@@ -3,14 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Authorization</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+          crossorigin="anonymous">
 </head>
 <body>
-<h1>Authorization</h1>
+<main class="container">
+    <h3>Authorization</h3>
 <form action="/auth/" method="post">
-    <p><b>Enter login and password</b></p>
-    <p><input placeholder="login" type="text" name="login"></p>
-    <p><input placeholder="password" type="text" name="password"></p>
-    <p><input type="submit"></p>
+    <div class="form-group">
+        <label for="formGroupExampleInput">Login</label>
+        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Login" name="login">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+</main>
 </body>
 </html>
