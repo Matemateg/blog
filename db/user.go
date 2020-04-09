@@ -6,9 +6,10 @@ import (
 	"fmt"
 	"github.com/Matemateg/blog/entities"
 	"github.com/go-sql-driver/mysql"
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+	"golang.org/x/crypto/bcrypt"
+	"log"
 )
 
 type User struct {
@@ -28,13 +29,25 @@ func (u *User) GetByID(id int64) (*entities.User, error) {
 	return &p, nil
 }
 
-func (u *User) GetByLogin(login, password string) (*entities.User, error) {
-	row := u.db.QueryRowx("SELECT * FROM users WHERE login = ? AND password = ?", login, password)
+func (u *User) getByLogin(login string) (*entities.User, error) {
+	row := u.db.QueryRowx("SELECT * FROM users WHERE login = ?", login)
 	var p entities.User
 	if err := row.StructScan(&p); err != nil {
-		return nil, fmt.Errorf("getting user from db with login, password, %v", err)
+		return nil, fmt.Errorf("getting user from db with login, %v", err)
 	}
 	return &p, nil
+}
+
+func (u *User) GetByLoginPassword(login, password string) (*entities.User, error) {
+	user, err := u.getByLogin(login)
+	if err != nil {
+		return nil, fmt.Errorf("getting user from db with login, %v", err)
+	}
+	checkPass := comparePasswords(user.Password, password)
+	if !checkPass {
+		return nil, fmt.Errorf("uncorrect password, %v", err)
+	}
+	return user, nil
 }
 
 func (u *User) GetBySSID(ssid string) (*entities.User, error) {
@@ -49,17 +62,38 @@ func (u *User) GetBySSID(ssid string) (*entities.User, error) {
 	return &p, nil
 }
 
-func (u *User) RegWithLoginPass(name, login, password string) (error) {
+func (u *User) RegWithLoginPass(name, login, password string) error {
 	ssid := uuid.New().String()
-	_, err := u.db.Exec("INSERT INTO users (name, login, password, session_id) VALUES (?, ?, ?, ?)", name, login, password, ssid)
-
+	passwordHashString, err := hashWithSalt(password)
+	if err != nil {
+		return fmt.Errorf("hashing password, %v", err)
+	}
+	_, err = u.db.Exec("INSERT INTO users (name, login, password, session_id) VALUES (?, ?, ?, ?)", name, login, passwordHashString, ssid)
 	if err == nil {
-		return  nil
+		return nil
 	}
 
 	if me, ok := err.(*mysql.MySQLError); ok && me.Number == 1062 {
-			return errors.New("User already exists in a database.")
+		return errors.New("User already exists in a database.")
 	}
 
 	return fmt.Errorf("insert user into db with name, login, password, %v", err)
+}
+func hashWithSalt(pwd string) (string, error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(pwd), bcrypt.DefaultCost)
+	if err != nil {
+		return "", err
+	}
+	return string(hash), nil
+}
+
+func comparePasswords(hashedPwd string, plainPwd string) bool {
+	byteHash := []byte(hashedPwd)
+	bytePlainPwd := []byte(plainPwd)
+	err := bcrypt.CompareHashAndPassword(byteHash, bytePlainPwd)
+	if err != nil {
+		log.Println(err)
+		return false
+	}
+	return true
 }

@@ -36,7 +36,7 @@ func (us *UserService) GetUserProfile(id int64) (*UserProfileData, error) {
 }
 
 func (us *UserService) Login(login, password string) (*entities.User, error) {
-	user, err := us.userDB.GetByLogin(login, password)
+	user, err := us.userDB.GetByLoginPassword(login, password)
 	if err != nil {
 		return nil, fmt.Errorf("getting user, %v", err)
 	}
@@ -60,10 +60,16 @@ func (us *UserService) NewPost(userID int64, text string) error {
 }
 
 func (us *UserService) Registration(name, login, password string) (*entities.User, error) {
+	if name == "" && login == "" && password == "" {
+		return nil, fmt.Errorf("name, login or password are too short")
+	}
 	err := us.userDB.RegWithLoginPass(name, login, password)
+	if err != nil {
+		return nil, fmt.Errorf("register user, %v", err)
+	}
+	user, err := us.userDB.GetByLoginPassword(login, password)
 	if err != nil {
 		return nil, fmt.Errorf("getting user, %v", err)
 	}
-	user, _ := us.userDB.GetByLogin(login, password)
 	return user, nil
 }
