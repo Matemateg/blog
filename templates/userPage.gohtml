@@ -30,24 +30,19 @@
         </div>
 
         {{if not .CurrentUser}}
-        <div class="user-block">
-            <a href="/login/" class="">Login</a>
+        <div class="user-block px-2">
+            <a href="/login/" class="">Sign In</a>
+        </div>
+        <div class="user-block px-2">
+            <a href="/registration/" class="">Sign Up</a>
         </div>
         {{else}}
-        <div class="user-block">
+        <div class="user-block px-2">
             <span class="navbar-text user-name">Здравствуйте, {{.CurrentUser.Name}}</span>
             <a href="/logout/" class="">Logout</a>
         </div>
         {{end}}
     </nav>
-
-
-{{/*    {{if not .CurrentUser}}*/}}
-{{/*        <a href="/login/">Login</a><br>*/}}
-{{/*    {{else}}*/}}
-{{/*        Здравствуйте, {{.CurrentUser.Name}}*/}}
-{{/*        <a href="/logout/">Logout</a><br>*/}}
-{{/*    {{end}}*/}}
 
     {{template "content" .}}
 

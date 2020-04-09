@@ -1,4 +1,4 @@
-package handlers
+package registration
 
 import (
 	"fmt"
@@ -6,19 +6,20 @@ import (
 	"net/http"
 )
 
-type UserAuth struct {
+type UserSignup struct {
 	service *service.UserService
 }
 
-func NewUserAuth(service *service.UserService) *UserAuth {
-	return &UserAuth{service: service}
+func NewUserSignup(service *service.UserService) *UserSignup {
+	return &UserSignup{service: service}
 }
 
-func (u *UserAuth) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *UserSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	userName := r.PostFormValue("name")
 	userLogin := r.PostFormValue("login")
 	userPassword := r.PostFormValue("password")
 
-	user, err := u.service.Login(userLogin, userPassword)
+	user, err := h.service.Registration(userName, userLogin, userPassword)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

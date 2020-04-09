@@ -58,3 +58,12 @@ func (us *UserService) NewPost(userID int64, text string) error {
 	}
 	return nil
 }
+
+func (us *UserService) Registration(name, login, password string) (*entities.User, error) {
+	err := us.userDB.RegWithLoginPass(name, login, password)
+	if err != nil {
+		return nil, fmt.Errorf("getting user, %v", err)
+	}
+	user, _ := us.userDB.GetByLogin(login, password)
+	return user, nil
+}

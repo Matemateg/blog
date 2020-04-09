@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/Matemateg/blog/db"
 	"github.com/Matemateg/blog/handlers"
+	"github.com/Matemateg/blog/handlers/login"
+	"github.com/Matemateg/blog/handlers/registration"
 	mw "github.com/Matemateg/blog/middlewares"
 	"github.com/Matemateg/blog/service"
 	_ "github.com/go-sql-driver/mysql"
@@ -24,9 +26,11 @@ func main() {
 	userProfileSrv := service.NewUserProfile(db.NewUser(sqlDB), db.NewPost(sqlDB))
 	http.Handle("/user/", mw.Auth(handlers.NewUserProfile(userProfileSrv), userProfileSrv))
 
-	http.Handle("/login/", handlers.NewPageLogin())
+	http.Handle("/registration/", registration.NewPageRegistration())
+	http.Handle("/signup/", registration.NewUserSignup(userProfileSrv))
 
-	http.Handle("/auth/", handlers.NewUserAuth(userProfileSrv))
+	http.Handle("/login/", login.NewPageLogin())
+	http.Handle("/auth/", login.NewUserAuth(userProfileSrv))
 
 	http.Handle("/logout/", handlers.NewPageLogout())
 

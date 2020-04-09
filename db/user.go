@@ -2,9 +2,12 @@ package db
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"github.com/Matemateg/blog/entities"
+	"github.com/go-sql-driver/mysql"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -44,4 +47,19 @@ func (u *User) GetBySSID(ssid string) (*entities.User, error) {
 		return nil, fmt.Errorf("getting user from db with ssid, %v", err)
 	}
 	return &p, nil
+}
+
+func (u *User) RegWithLoginPass(name, login, password string) (error) {
+	ssid := uuid.New().String()
+	_, err := u.db.Exec("INSERT INTO users (name, login, password, session_id) VALUES (?, ?, ?, ?)", name, login, password, ssid)
+
+	if err == nil {
+		return  nil
+	}
+
+	if me, ok := err.(*mysql.MySQLError); ok && me.Number == 1062 {
+			return errors.New("User already exists in a database.")
+	}
+
+	return fmt.Errorf("insert user into db with name, login, password, %v", err)
 }
