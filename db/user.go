@@ -97,3 +97,20 @@ func comparePasswords(hashedPwd string, plainPwd string) bool {
 	}
 	return true
 }
+
+func (u *User) SearchUsers(searchString string) ([]entities.User, error) {
+	rows, err := u.db.Queryx("SELECT * FROM users WHERE MATCH (login,name) AGAINST (?)", searchString)
+	if err != nil {
+		return nil, err
+	}
+
+	var users []entities.User
+	for rows.Next() {
+		var user entities.User
+		if err = rows.StructScan(&user); err != nil {
+			return nil, fmt.Errorf("search user from db, %v", err)
+		}
+		users = append(users, user)
+	}
+	return users, nil
+}

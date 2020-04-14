@@ -9,17 +9,17 @@ import (
 	"strconv"
 )
 
-type UserProfile struct {
+type userProfile struct {
 	service *service.UserService
 	tpl     *template.Template
 }
 
-func NewUserProfile(service *service.UserService) *UserProfile {
-	tpl := template.Must(template.ParseFiles("templates/userPage.gohtml", "templates/content.html"))
-	return &UserProfile{service: service, tpl: tpl}
+func NewUserProfile(service *service.UserService) *userProfile {
+	tpl := template.Must(template.ParseFiles("templates/basePage.gohtml", "templates/userProfile.html"))
+	return &userProfile{service: service, tpl: tpl}
 }
 
-func (u *UserProfile) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (u *userProfile) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	userID, err := strconv.ParseInt(r.FormValue("id"), 10, 64)
 	if err != nil {
 		http.Error(w, "invalid user id: "+err.Error(), http.StatusBadRequest)

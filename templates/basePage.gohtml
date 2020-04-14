@@ -29,6 +29,11 @@
             </ul>
         </div>
 
+        <form class="form-inline my-2 my-lg-0" action="/search" method="get">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q">
+            <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
+        </form>
+
         {{if not .CurrentUser}}
         <div class="user-block px-2">
             <a href="/login/" class="">Sign In</a>
@@ -46,12 +51,6 @@
 
     {{template "content" .}}
 
-    {{if .CanWrite}}
-        <form action="/addPost/" method="post">
-            <p><textarea rows="4" cols="45" name="text" placeholder="Новый пост"></textarea></p>
-            <p><input type="submit" value="Отправить"></p>
-        </form>
-    {{end}}
 </main>
 
 <footer class="footer">

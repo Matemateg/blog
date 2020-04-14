@@ -16,4 +16,10 @@
         <hr>
     {{end}}
 
+    {{if .CanWrite}}
+        <form action="/addPost/" method="post">
+            <p><textarea rows="4" cols="45" name="text" placeholder="Новый пост"></textarea></p>
+            <p><input type="submit" value="Отправить"></p>
+        </form>
+    {{end}}
 {{end}}

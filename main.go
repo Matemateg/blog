@@ -36,5 +36,7 @@ func main() {
 
 	http.Handle("/addPost/", mw.Auth(handlers.NewNewPost(userProfileSrv), userProfileSrv))
 
+	http.Handle("/search", mw.Auth(handlers.NewPageSearch(userProfileSrv), userProfileSrv))
+
 	fmt.Println(http.ListenAndServe(":8080", nil))
 }

@@ -73,3 +73,11 @@ func (us *UserService) Registration(name, login, password string) (*entities.Use
 	}
 	return user, nil
 }
+
+func (us *UserService) SearchUser(searchString string) ([]entities.User, error) {
+	users, err := us.userDB.SearchUsers(searchString)
+	if err != nil {
+		return nil, fmt.Errorf("search user, %v", err)
+	}
+	return users, nil
+}

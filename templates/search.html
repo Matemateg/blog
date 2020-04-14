@@ -1,0 +1,16 @@
+{{define "content"}}
+    <h2>Search results</h2>
+    <br>
+
+    {{range .FoundUsers}}
+        <div class="row">
+            <div class="col">
+                <p>
+                    <a href="/user/?id={{.ID}}">{{.Login}} {{.Name}}</a>
+                </p>
+            </div>
+        </div>
+        <hr>
+    {{end}}
+
+{{end}}
