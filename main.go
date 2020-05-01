@@ -18,7 +18,6 @@ import (
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
-		//log.Fatal("$PORT must be set")
 		port = "8080"
 	}
 
@@ -50,7 +49,6 @@ func main() {
 
 	http.Handle("/search", mw.Auth(handlers.NewPageSearch(userProfileSrv), userProfileSrv))
 
-	//fmt.Println(http.ListenAndServe(":8080", nil))
 	wd, _ := os.Getwd()
 	log.Printf("working in directory: %s", wd)
 	log.Printf("starting linsen on port: %s", port)
