@@ -12,10 +12,21 @@ import (
 	"github.com/jmoiron/sqlx"
 	"log"
 	"net/http"
+	"os"
 )
 
 func main() {
-	sqlDB, err := sqlx.Connect("mysql", "root:123@/blog?parseTime=true")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	mysqlDSN := os.Getenv("MYSQL_DSN")
+	if mysqlDSN == "" {
+		mysqlDSN = "root:123@/blog?parseTime=true"
+	}
+
+	sqlDB, err := sqlx.Connect("mysql", mysqlDSN)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -38,5 +49,8 @@ func main() {
 
 	http.Handle("/search", mw.Auth(handlers.NewPageSearch(userProfileSrv), userProfileSrv))
 
-	fmt.Println(http.ListenAndServe(":8080", nil))
+	wd, _ := os.Getwd()
+	log.Printf("working in directory: %s", wd)
+	log.Printf("starting linsen on port: %s", port)
+	fmt.Println(http.ListenAndServe(":"+port, nil))
 }
