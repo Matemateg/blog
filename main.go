@@ -34,7 +34,12 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+
 	userProfileSrv := service.NewUserProfile(db.NewUser(sqlDB), db.NewPost(sqlDB))
+	postSrv := service.NewPostService(db.NewUser(sqlDB), db.NewPost(sqlDB))
+
+	http.Handle("/", mw.Auth(handlers.NewMainPage(postSrv), userProfileSrv))
+
 	http.Handle("/user/", mw.Auth(handlers.NewUserProfile(userProfileSrv), userProfileSrv))
 
 	http.Handle("/registration/", registration.NewPageRegistration())
