@@ -42,10 +42,10 @@ func main() {
 
 	http.Handle("/user/", mw.Auth(handlers.NewUserProfile(userProfileSrv), userProfileSrv))
 
-	http.Handle("/registration/", registration.NewPageRegistration())
+	http.Handle("/registration/", mw.Auth(registration.NewPageRegistration(), userProfileSrv))
 	http.Handle("/signup/", registration.NewUserSignup(userProfileSrv))
 
-	http.Handle("/login/", login.NewPageLogin())
+	http.Handle("/login/", mw.Auth(login.NewPageLogin(), userProfileSrv))
 	http.Handle("/auth/", login.NewUserAuth(userProfileSrv))
 
 	http.Handle("/logout/", handlers.NewPageLogout())
